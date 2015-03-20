@@ -418,6 +418,12 @@ class forbidden_view_config(object):
         return wrapped
 
 def _find_views(registry, request_iface, context_iface, view_name):
+    view_cache = registry._view_cache
+    view_callables = view_cache.get((request_iface, context_iface, view_name))
+    if view_callables is not None:
+        return view_callables
+
+    view_callables = []
     registered = registry.adapters.registered
     view_types = (IView, ISecuredView, IMultiView)
     for req_type, ctx_type in itertools.product(
@@ -431,4 +437,7 @@ def _find_views(registry, request_iface, context_iface, view_name):
                 name=view_name,
             )
             if view_callable is not None:
-                yield view_callable
+                view_callables.append(view_callable)
+
+    view_cache[(request_iface, context_iface, view_name)] = view_callables
+    return view_callables

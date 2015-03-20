@@ -139,13 +139,14 @@ class Router(object):
 
         # find a view callable
         context_iface = providedBy(context)
-        views_iter = _find_views(
+        view_callables = _find_views(
             registry,
             request.request_iface,
             context_iface,
             view_name,
             )
 
+        views_iter = iter(view_callables)
         view_callable = next(views_iter, None)
 
         # invoke the view callable

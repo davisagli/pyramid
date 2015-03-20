@@ -39,6 +39,10 @@ class Registry(Components, dict):
 
     _settings = None
 
+    def __init__(self, *args, **kw):
+        self._view_cache = {}
+        super(Registry, self).__init__(*args, **kw)
+
     def __nonzero__(self):
         # defeat bool determination via dict.__len__
         return True

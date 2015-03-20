@@ -1284,6 +1284,8 @@ class ViewsConfiguratorMixin(object):
                         derived_view,
                         (IExceptionViewClassifier, request_iface, context),
                         view_iface, name)
+                # Clear view lookup cache
+                self.registry._view_cache.clear()
 
             is_multiview = IMultiView.providedBy(old_view)
             old_phash = getattr(old_view, '__phash__', DEFAULT_PHASH)
